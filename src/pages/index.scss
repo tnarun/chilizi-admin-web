@@ -1,0 +1,30 @@
+$w: 15rem;
+
+.index {
+  display: flex;
+
+  .appBar {
+    width: calc(100% - #{$w});
+    margin-left: $w;
+  }
+  .drawer {
+    width: $w;
+    flex-shrink: 0;
+    .drawerPaper {
+      width: $w;
+    }
+    .pad {
+      height: 48px;
+    }
+    .nested {
+      padding-left: 32px;
+    }
+  }
+  .main {
+    background-color: #fff;
+    flex-grow: 1;
+    margin-top: 48px;
+    padding: 1.5rem;
+    font-size: 1rem;
+  }
+}
