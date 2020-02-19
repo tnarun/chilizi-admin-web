@@ -9,7 +9,7 @@ export default {
       antd: false,
       dva: false,
       dynamicImport: false,
-      title: 'chilizi-admin',
+      title: 'chilizi power admin',
       dll: false,
       
       routes: {

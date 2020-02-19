@@ -14,28 +14,10 @@ const Router = DefaultRouter;
 const routes = [
   {
     path: '/',
-    component: require('../../layouts/index.js').default,
-    routes: [
-      {
-        path: '/',
-        exact: true,
-        component: require('../index.jsx').default,
-        _title: 'chilizi-admin',
-        _title_default: 'chilizi-admin',
-      },
-      {
-        component: () =>
-          React.createElement(
-            require('/Users/songliang/chilizi/chilizi-admin-web/node_modules/umi-build-dev/lib/plugins/404/NotFound.js')
-              .default,
-            { pagesPath: 'src/pages', hasRoutesInConfig: false },
-          ),
-        _title: 'chilizi-admin',
-        _title_default: 'chilizi-admin',
-      },
-    ],
-    _title: 'chilizi-admin',
-    _title_default: 'chilizi-admin',
+    exact: true,
+    component: require('../index.jsx').default,
+    _title: 'chilizi power admin',
+    _title_default: 'chilizi power admin',
   },
   {
     component: () =>
@@ -44,8 +26,8 @@ const routes = [
           .default,
         { pagesPath: 'src/pages', hasRoutesInConfig: false },
       ),
-    _title: 'chilizi-admin',
-    _title_default: 'chilizi-admin',
+    _title: 'chilizi power admin',
+    _title_default: 'chilizi power admin',
   },
 ];
 window.g_routes = routes;
