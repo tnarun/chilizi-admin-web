@@ -1,84 +1,88 @@
 import React from 'react'
-import css from './index.scss'
+// import css from './index.scss'
 
-import CssBaseline from '@material-ui/core/CssBaseline'
+import { 
+  Admin, Resource,
+  List, Datagrid, TextField, EditButton,
+  Create, SimpleForm, ReferenceInput, SelectInput, TextInput, LongTextInput,
+  Edit
+} from 'react-admin'
 
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
+import chineseMessages from 'ra-language-chinese'
+import polyglotI18nProvider from 'ra-i18n-polyglot'
 
-import Drawer from '@material-ui/core/Drawer'
-import Divider from '@material-ui/core/Divider'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
+import fakeDataProvider from 'ra-data-fakerest'
 
-import PersonIcon from '@material-ui/icons/Person'
-import ContactSupportIcon from '@material-ui/icons/ContactSupport'
+const dataProvider = fakeDataProvider({
+  users: [
+    { id: 0, title: 'Hello, world!', time: new Date('2020-02-02') },
+    { id: 1, title: 'FooBar' },
+  ]
+}, true)
 
-import Markdown from 'markdown-to-jsx'
-
-const md = `
-  这里是用户管理页面，在这里可以进行以下操作：
-
-  - 列出所有用户
-  - 增加新用户
-  - 修改用户信息
-  - 根据 authToken 查询用户
-`
+const i18nProvider = polyglotI18nProvider(() => chineseMessages, 'cn')
 
 export default class index extends React.Component {
   render () {
-    return <div className={ css.index }>
-      <CssBaseline />
-      <TopBar />
-      <SideBar />
-
-      <main className={ css.main }>
-        <Markdown>
-          { md }
-        </Markdown>
-      </main>
-    </div>
+    return <Admin 
+      i18nProvider={ i18nProvider }
+      dataProvider={ dataProvider }
+    >
+      <Resource 
+        name="users" 
+        list={ PostList }
+        create={ PostCreate }
+        edit={ PostEdit }
+      />
+    </Admin>
   }
 }
 
-class TopBar extends React.Component {
+class PostList extends React.Component {
   render () {
-    return <AppBar position="fixed" className={ css.appBar }>
-      <Toolbar variant='dense'>
-        <Typography variant="h6" noWrap>
-          用户管理
-        </Typography>
-      </Toolbar>
-    </AppBar>
+    return <List { ...this.props }>
+      <Datagrid>
+        <TextField source="id" />
+        <TextField source="title" />
+        <TextField source="time" />
+        <EditButton />
+      </Datagrid>
+    </List>
   }
 }
 
-class SideBar extends React.Component {
+class PostCreate extends React.Component {
   render () {
-    return <Drawer 
-      className={ css.drawer } 
-      classes={{
-        paper: css.drawerPaper,
-      }}
-      variant='permanent'>
-      <div className={ css.pad } />
-      <Divider />
-      <List>
-        <ListItem button>
-          <ListItemIcon><PersonIcon /></ListItemIcon>
-          <ListItemText primary='用户管理' />
-        </ListItem>
+    return <Create { ...this.props }>
+      <SimpleForm>
+        {/* <ReferenceInput label="User" source="userId" reference="users">
+          <SelectInput optionText="name" />
+        </ReferenceInput> */}
+        <TextInput source="title" />
+        {/* <LongTextInput source="body" /> */}
+      </SimpleForm>
+    </Create>
+  }
+}
 
-        <List>
-          <ListItem button className={ css.nested }>
-            <ListItemIcon><ContactSupportIcon /></ListItemIcon>
-            <ListItemText primary='待定' />
-          </ListItem>
-        </List>
-      </List>
-    </Drawer>
+class PostTitle extends React.Component {
+  render () {
+    let { record } = this.props
+    return <span>Post { record ? `"${record.title}"` : "" }</span>
+  }
+}
+
+class PostEdit extends React.Component {
+  render () {
+    return <Edit { ...this.props }>
+      <SimpleForm>
+        <TextInput disabled source="id" />
+        {/* <ReferenceInput label="User" source="userId" reference="users">
+          <SelectInput optionText="name" />
+        </ReferenceInput> */}
+        <TextInput source="title" />
+        {/* <LongTextInput source="body" /> */}
+      </SimpleForm>
+    </Edit>
   }
 }
