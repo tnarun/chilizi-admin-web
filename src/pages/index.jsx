@@ -3,21 +3,20 @@ import React from 'react'
 import { 
   Admin, Resource,
   List, Datagrid, TextField, EditButton,
-  Create, SimpleForm, ReferenceInput, SelectInput, TextInput, LongTextInput,
-  Edit
+  Create, SimpleForm, TextInput, PasswordInput,
+  Edit,
+
+  Toolbar, SaveButton, Show, ShowButton, SimpleShowLayout,
+  DateField,
 } from 'react-admin'
 
 import chineseMessages from 'ra-language-chinese'
 import polyglotI18nProvider from 'ra-i18n-polyglot'
 
-import fakeDataProvider from 'ra-data-fakerest'
-
-const dataProvider = fakeDataProvider({
-  users: [
-    { id: 0, title: 'Hello, world!', time: new Date('2020-02-02') },
-    { id: 1, title: 'FooBar' },
-  ]
-}, true)
+import jsonServerProvider from 'ra-data-json-server'
+// const endpoint = 'http://localhost:8000/2016-08-15/proxy/chilizi-user-auth/provider/json'
+const endpoint = 'https://1246105.cn-beijing.fc.aliyuncs.com/2016-08-15/proxy/chilizi-user-auth/provider/json'
+const dataProvider = jsonServerProvider(endpoint)
 
 const i18nProvider = polyglotI18nProvider(() => chineseMessages, 'cn')
 
@@ -29,59 +28,75 @@ export default class index extends React.Component {
     >
       <Resource 
         name="users" 
-        list={ PostList }
-        create={ PostCreate }
-        edit={ PostEdit }
+        list={ UserList }
+        create={ UserCreate }
+        edit={ UserEdit }
+        show={ UserShow }
       />
     </Admin>
   }
 }
 
-class PostList extends React.Component {
+class UserList extends React.Component {
   render () {
     return <List { ...this.props }>
       <Datagrid>
         <TextField source="id" />
-        <TextField source="title" />
-        <TextField source="time" />
+        <TextField source="login" />
+        <DateField source="createdAt" showTime />
+        <DateField source="updatedAt" showTime />
+        <TextField source="description" />
+
+        <ShowButton />
         <EditButton />
       </Datagrid>
     </List>
   }
 }
 
-class PostCreate extends React.Component {
+class UserCreate extends React.Component {
   render () {
     return <Create { ...this.props }>
       <SimpleForm>
-        {/* <ReferenceInput label="User" source="userId" reference="users">
-          <SelectInput optionText="name" />
-        </ReferenceInput> */}
-        <TextInput source="title" />
-        {/* <LongTextInput source="body" /> */}
+        <TextInput source="login" />
+        <PasswordInput source="password" />
       </SimpleForm>
     </Create>
   }
 }
 
-class PostTitle extends React.Component {
+class UserEditToolbar extends React.Component {
   render () {
-    let { record } = this.props
-    return <span>Post { record ? `"${record.title}"` : "" }</span>
+    return <Toolbar { ...this.props } >
+      <SaveButton 
+        label='保存用户信息' 
+      />
+    </Toolbar>
   }
 }
 
-class PostEdit extends React.Component {
+class UserEdit extends React.Component {
   render () {
-    return <Edit { ...this.props }>
-      <SimpleForm>
+    return <Edit undoable={ false } { ...this.props }>
+      <SimpleForm toolbar={ <UserEditToolbar /> }>
         <TextInput disabled source="id" />
-        {/* <ReferenceInput label="User" source="userId" reference="users">
-          <SelectInput optionText="name" />
-        </ReferenceInput> */}
-        <TextInput source="title" />
-        {/* <LongTextInput source="body" /> */}
+        <TextInput disabled source="login" />
+        <TextInput multiline source="description" label='用户简介' />
       </SimpleForm>
     </Edit>
+  }
+}
+
+class UserShow extends React.Component {
+  render () {
+    return <Show { ...this.props }>
+      <SimpleShowLayout>
+        <TextField source="id" />
+        <TextField source="login" />
+        <DateField source="createdAt" showTime />
+        <DateField source="updatedAt" showTime />
+        <TextField source="description" />
+      </SimpleShowLayout>
+    </Show>
   }
 }
